@@ -3,11 +3,10 @@ package com.tradingplatform.controller
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.restassured.specification.RequestSpecification
 import org.hamcrest.Matchers
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 @MicronautTest
-class GlobalExceptionControllerTest{
+class GlobalExceptionControllerTest {
 
     @Test
     fun `return 404 with proper error message`(spec: RequestSpecification) {
@@ -18,6 +17,7 @@ class GlobalExceptionControllerTest{
             .body("error", Matchers.contains("invalid endpoint"))
 
     }
+
     @Test
     fun `return 400 with proper error message for invalid json`(spec: RequestSpecification) {
         spec.`when`()

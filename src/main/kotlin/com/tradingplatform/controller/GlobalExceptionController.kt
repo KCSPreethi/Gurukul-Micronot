@@ -7,7 +7,6 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Error
-import io.micronaut.http.hateoas.JsonError
 import javax.validation.ConstraintViolationException
 
 @Controller
@@ -26,7 +25,7 @@ class GlobalExceptionController {
 
     @Error(global = true)
     fun emptyJsonError(request: HttpRequest<*>, e: Throwable): HttpResponse<ErrorResponse> {
-        return HttpResponse.badRequest(ErrorResponse(listOf(e.message?:"")))
+        return HttpResponse.badRequest(ErrorResponse(listOf(e.message ?: "")))
     }
 
 }

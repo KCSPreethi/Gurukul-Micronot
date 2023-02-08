@@ -5,7 +5,6 @@ import com.tradingplatform.model.BuyOrders
 import com.tradingplatform.model.CompletedOrders
 import com.tradingplatform.model.SellOrders
 import com.tradingplatform.model.User
-import com.tradingplatform.validations.maxLimitForInventory
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.restassured.specification.RequestSpecification
 import org.hamcrest.Matchers
