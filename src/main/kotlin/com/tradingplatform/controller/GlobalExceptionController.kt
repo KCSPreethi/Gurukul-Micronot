@@ -26,7 +26,7 @@ class GlobalExceptionController {
 
     @Error(global = true)
     fun emptyJsonError(request: HttpRequest<*>, e: Throwable): HttpResponse<ErrorResponse> {
-        return HttpResponse.badRequest(ErrorResponse(listOf(e.toString())))
+        return HttpResponse.badRequest(ErrorResponse(listOf(e.message?:"")))
     }
 
 }
