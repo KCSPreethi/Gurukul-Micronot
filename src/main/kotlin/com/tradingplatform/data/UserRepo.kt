@@ -12,8 +12,5 @@ class UserRepo {
         fun addUser(user: User) {
             users[user.userName] = user
         }
-
     }
-
-
 }
