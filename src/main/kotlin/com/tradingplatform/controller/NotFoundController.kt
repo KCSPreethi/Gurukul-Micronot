@@ -1,4 +1,5 @@
 package com.tradingplatform.controller
+
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller

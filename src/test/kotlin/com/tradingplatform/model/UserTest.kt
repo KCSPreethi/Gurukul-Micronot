@@ -67,7 +67,7 @@ class UserTest {
         val sampleUserName = ".."
 
         val actualResponse = UserReqValidation.isUserNameValid(sampleUserName)
-        Assertions.assertEquals(1,actualResponse.size)
+        Assertions.assertEquals(1, actualResponse.size)
         Assertions.assertEquals("Invalid Username format", actualResponse[0])
     }
 
@@ -86,7 +86,7 @@ class UserTest {
         val samplePhoneNumber = "+91774678767989"
         val actualResponse = UserReqValidation.isPhoneValid(samplePhoneNumber)
 
-        Assertions.assertEquals(1,actualResponse.size)
+        Assertions.assertEquals(1, actualResponse.size)
         Assertions.assertEquals("Invalid phoneNumber format", actualResponse[0])
     }
 
@@ -96,7 +96,7 @@ class UserTest {
 
         val actualResponse = UserReqValidation.isPhoneValid(samplePhoneNumber)
 
-        Assertions.assertEquals(1,actualResponse.size)
+        Assertions.assertEquals(1, actualResponse.size)
         Assertions.assertEquals("Invalid phoneNumber format", actualResponse[0])
 
     }
@@ -107,7 +107,7 @@ class UserTest {
 
         val actualResponse = UserReqValidation.isPhoneValid(samplePhoneNumber)
 
-        Assertions.assertEquals(0,actualResponse.size)
+        Assertions.assertEquals(0, actualResponse.size)
     }
 
     @Test
@@ -115,7 +115,7 @@ class UserTest {
         val sampleFirstName = "Atul0"
         val actualResponse = UserReqValidation.isNameValid(sampleFirstName)
 
-        Assertions.assertEquals(1,actualResponse.size)
+        Assertions.assertEquals(1, actualResponse.size)
         Assertions.assertEquals("Invalid Name format", actualResponse[0])
     }
 

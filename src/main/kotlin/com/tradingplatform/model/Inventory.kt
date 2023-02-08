@@ -1,7 +1,5 @@
 package com.tradingplatform.model
 
-import com.tradingplatform.validations.maxLimitForInventory
-
 class Inventory(var esopNormal: ESOPType, var esopPerformance: ESOPType, var credit: Int) {
     fun getNormalFreeQuantity(): Int {
         return esopNormal.free

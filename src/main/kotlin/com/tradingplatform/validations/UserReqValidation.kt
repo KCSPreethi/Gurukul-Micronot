@@ -126,12 +126,12 @@ class UserReqValidation {
             val errorList = arrayListOf<String>()
             val response = mutableMapOf<String, List<String>>()
 
-            val validFeilds= ifValidFields(req)
-            if(validFeilds!=null)
+            val validFeilds = ifValidFields(req)
+            if (validFeilds != null)
                 return validFeilds
 
-            val feildDataValid= checkIfFeildDataIsValid(req)
-            if(feildDataValid!=null)
+            val feildDataValid = checkIfFeildDataIsValid(req)
+            if (feildDataValid != null)
                 return feildDataValid
 
             return null
@@ -160,8 +160,6 @@ class UserReqValidation {
         }
 
 
-
-
         fun checkIfFeildDataIsValid(req: JsonObject): MutableMap<String, List<String>>? {
             val response = mutableMapOf<String, List<String>>()
             val errorList = arrayListOf<String>()
@@ -171,7 +169,7 @@ class UserReqValidation {
             errorList.addAll(isNameValid(req["firstName"].stringValue))
             errorList.addAll(isNameValid(req["lastName"].stringValue))
 
-            if(errorList.isNotEmpty()) {
+            if (errorList.isNotEmpty()) {
                 response["error"] = errorList
                 return response
             }

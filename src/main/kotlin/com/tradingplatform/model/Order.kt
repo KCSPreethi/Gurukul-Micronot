@@ -1,4 +1,5 @@
 package com.tradingplatform.model
+
 import java.math.BigInteger
 import java.util.*
 import kotlin.math.ceil
@@ -10,10 +11,10 @@ const val esopPerformance = 1
 
 data class PriceQtyPair(val price: Int, var quantity: Int) //Utility class to make the response json pretty
 
-data class Order (val type : String, val qty: Int, val price : Int, val user : User, val esopType: Int= esopNormal) {
-     var status = "unfilled"
+data class Order(val type: String, val qty: Int, val price: Int, val user: User, val esopType: Int = esopNormal) {
+    var status = "unfilled"
     var filled = ArrayList<PriceQtyPair>()
-    val id:Pair<Int,Int> = Pair(BuyOrders.size + SellOrders.size + CompletedOrders.size*2,esopType)
+    val id: Pair<Int, Int> = Pair(BuyOrders.size + SellOrders.size + CompletedOrders.size * 2, esopType)
     val timestamp = System.currentTimeMillis()
     var filledQty = 0
 
@@ -27,15 +28,14 @@ data class Order (val type : String, val qty: Int, val price : Int, val user : U
         }
     }
 
-    private fun placeBuyOrder(){
+    private fun placeBuyOrder() {
 
-        while(SellOrders.isNotEmpty()){
+        while (SellOrders.isNotEmpty()) {
             val potentialSellOrder = SellOrders.poll()
-            if(potentialSellOrder.price > price || filledQty == qty){
+            if (potentialSellOrder.price > price || filledQty == qty) {
                 SellOrders.add(potentialSellOrder)
                 break
-            }
-            else {
+            } else {
                 val potentialSellOrderQty =
                     min(qty - filledQty, potentialSellOrder.qty - potentialSellOrder.filledQty)
 
@@ -55,13 +55,13 @@ data class Order (val type : String, val qty: Int, val price : Int, val user : U
                 potentialSellOrder.filledQty += potentialSellOrderQty
 
                 if (potentialSellOrder.id.second == 1) {
-                    potentialSellOrder.user.wallet.addAmountToFree( potentialSellOrderQty * potentialSellOrder.price)
+                    potentialSellOrder.user.wallet.addAmountToFree(potentialSellOrderQty * potentialSellOrder.price)
                     potentialSellOrder.user.inventory.removePerformanceESOPFromLocked(potentialSellOrderQty)
                 } else {
 
-                    val taxAmount : Int = ceil(potentialSellOrderQty * potentialSellOrder.price*0.02).toInt()
+                    val taxAmount: Int = ceil(potentialSellOrderQty * potentialSellOrder.price * 0.02).toInt()
 
-                    potentialSellOrder.user.wallet.addAmountToFree(potentialSellOrderQty*potentialSellOrder.price-taxAmount)
+                    potentialSellOrder.user.wallet.addAmountToFree(potentialSellOrderQty * potentialSellOrder.price - taxAmount)
                     PlatformData.feesEarned += BigInteger(taxAmount.toString())
                     potentialSellOrder.user.inventory.removeNormalESOPFromLocked(potentialSellOrderQty)
                 }
@@ -69,9 +69,10 @@ data class Order (val type : String, val qty: Int, val price : Int, val user : U
 
 
 
-                if(potentialSellOrder.filledQty < potentialSellOrder.qty && potentialSellOrder.filledQty > 0) potentialSellOrder.status = "partially filled"
+                if (potentialSellOrder.filledQty < potentialSellOrder.qty && potentialSellOrder.filledQty > 0) potentialSellOrder.status =
+                    "partially filled"
                 SellOrders.add(potentialSellOrder)
-                if(potentialSellOrder.filledQty == potentialSellOrder.qty) {
+                if (potentialSellOrder.filledQty == potentialSellOrder.qty) {
                     potentialSellOrder.status = "filled"
                     SellOrders.remove(potentialSellOrder)
 
@@ -80,95 +81,93 @@ data class Order (val type : String, val qty: Int, val price : Int, val user : U
                 }
             }
         }
-        if(filledQty == qty) {
+        if (filledQty == qty) {
             status = "filled"
             CompletedOrders[id] = this
-        }
-        else{
-            if(filledQty in 1 until qty) status = "partially filled"
+        } else {
+            if (filledQty in 1 until qty) status = "partially filled"
             BuyOrders.add(this)
         }
     }
 
-    private fun placeSellOrder(){
-        while(BuyOrders.isNotEmpty()){
+    private fun placeSellOrder() {
+        while (BuyOrders.isNotEmpty()) {
             val potentialBuyOrder = BuyOrders.poll()
-            if(potentialBuyOrder.price < price || filledQty == qty){
+            if (potentialBuyOrder.price < price || filledQty == qty) {
                 BuyOrders.add(potentialBuyOrder)
                 break
-            }
-            else {
+            } else {
                 val potentialBuyOrderQty = min(qty - filledQty, potentialBuyOrder.qty - potentialBuyOrder.filledQty)
 
                 filled.add(PriceQtyPair(price, potentialBuyOrderQty))
                 filledQty += potentialBuyOrderQty
 
 
-                if (id.second == 1){
+                if (id.second == 1) {
                     user.inventory.removePerformanceESOPFromLocked(potentialBuyOrderQty)
-                    user.wallet.addAmountToFree( potentialBuyOrderQty * price)
-                    user.wallet.removeAmountFromCredit( potentialBuyOrderQty * price)
-                }
-                else {
+                    user.wallet.addAmountToFree(potentialBuyOrderQty * price)
+                    user.wallet.removeAmountFromCredit(potentialBuyOrderQty * price)
+                } else {
 
-                    val taxAmount : Int = ceil(potentialBuyOrderQty * price*0.02).toInt()
+                    val taxAmount: Int = ceil(potentialBuyOrderQty * price * 0.02).toInt()
 
-                    user.wallet.addAmountToFree (potentialBuyOrderQty * price - taxAmount)
-                    user.wallet.removeAmountFromCredit (potentialBuyOrderQty * price - taxAmount)
+                    user.wallet.addAmountToFree(potentialBuyOrderQty * price - taxAmount)
+                    user.wallet.removeAmountFromCredit(potentialBuyOrderQty * price - taxAmount)
                     PlatformData.feesEarned += BigInteger(taxAmount.toString())
                     user.inventory.removeNormalESOPFromLocked(potentialBuyOrderQty)
 
                 }
 
 
-                potentialBuyOrder.filled.add(PriceQtyPair(price,potentialBuyOrderQty))
+                potentialBuyOrder.filled.add(PriceQtyPair(price, potentialBuyOrderQty))
                 potentialBuyOrder.filledQty += potentialBuyOrderQty
-                potentialBuyOrder.user.wallet.removeAmountFromLocked( potentialBuyOrderQty *potentialBuyOrder.price)
+                potentialBuyOrder.user.wallet.removeAmountFromLocked(potentialBuyOrderQty * potentialBuyOrder.price)
 
-                potentialBuyOrder.user.wallet.addAmountToFree( potentialBuyOrderQty * (potentialBuyOrder.price - price))
+                potentialBuyOrder.user.wallet.addAmountToFree(potentialBuyOrderQty * (potentialBuyOrder.price - price))
                 potentialBuyOrder.user.inventory.addNormalESOPToFree(potentialBuyOrderQty)
-                if(potentialBuyOrder.filledQty < potentialBuyOrder.qty && potentialBuyOrder.filledQty > 0) potentialBuyOrder.status = "partially filled"
+                if (potentialBuyOrder.filledQty < potentialBuyOrder.qty && potentialBuyOrder.filledQty > 0) potentialBuyOrder.status =
+                    "partially filled"
                 BuyOrders.add(potentialBuyOrder)
-                if(potentialBuyOrder.filledQty == potentialBuyOrder.qty) {
+                if (potentialBuyOrder.filledQty == potentialBuyOrder.qty) {
                     potentialBuyOrder.status = "filled"
                     BuyOrders.remove(potentialBuyOrder)
                     CompletedOrders[potentialBuyOrder.id] = potentialBuyOrder
                 }
             }
         }
-        if(filledQty == qty) {
+        if (filledQty == qty) {
             status = "filled"
             CompletedOrders[id] = this
-        }
-        else{
-            if(filledQty in 1 until qty) status = "partially filled"
+        } else {
+            if (filledQty in 1 until qty) status = "partially filled"
             SellOrders.add(this)
         }
     }
 }
 
 
-
-
-
-val BuyOrders = PriorityQueue { order1 : Order, order2 : Order ->
-    when{
+val BuyOrders = PriorityQueue { order1: Order, order2: Order ->
+    when {
         order1.price > order2.price -> -1
         order1.price < order2.price -> 1
-        else -> {(order1.timestamp - order2.timestamp).toInt()}
+        else -> {
+            (order1.timestamp - order2.timestamp).toInt()
+        }
     }
 }
 
-val SellOrders = PriorityQueue { order1 : Order, order2 : Order ->
-    when{
+val SellOrders = PriorityQueue { order1: Order, order2: Order ->
+    when {
         order1.id.second > order2.id.second -> -1
         order1.id.second < order2.id.second -> 1
         order1.price > order2.price -> 1
         order1.price < order2.price -> -1
-        else -> {(order1.timestamp - order2.timestamp).toInt()}
+        else -> {
+            (order1.timestamp - order2.timestamp).toInt()
         }
     }
+}
 
-val CompletedOrders = HashMap<Pair<Int,Int>, Order>()
+val CompletedOrders = HashMap<Pair<Int, Int>, Order>()
 
 

@@ -31,41 +31,39 @@ class InventoryController {
 
         val user = UserRepo.getUser(userName)!!
 
-        var responseTemp=InventoryReqValidation.isQuantityNull(body["quantity"])
-        if(responseTemp !=null) {
+        var responseTemp = InventoryReqValidation.isQuantityNull(body["quantity"])
+        if (responseTemp != null) {
             errorList.add(responseTemp)
             response["error"] = errorList
             return HttpResponse.badRequest(response)
         }
 
         val quantity = body["quantity"]
-        responseTemp=InventoryReqValidation.isQuantityValid(quantity)
-        if(responseTemp !=null) {
+        responseTemp = InventoryReqValidation.isQuantityValid(quantity)
+        if (responseTemp != null) {
             errorList.add(responseTemp)
             response["error"] = errorList
             return HttpResponse.badRequest(response)
         }
 
-        responseTemp=InventoryReqValidation.isAmountWithinLimit(quantity.intValue)
-        if(responseTemp !=null) {
+        responseTemp = InventoryReqValidation.isAmountWithinLimit(quantity.intValue)
+        if (responseTemp != null) {
             errorList.add(responseTemp)
             response["error"] = errorList
             return HttpResponse.badRequest(response)
         }
-        responseTemp=InventoryReqValidation.willQuantityExceedLimit(user,quantity.intValue)
-        if(responseTemp !=null) {
+        responseTemp = InventoryReqValidation.willQuantityExceedLimit(user, quantity.intValue)
+        if (responseTemp != null) {
             errorList.add(responseTemp)
             response["error"] = errorList
             return HttpResponse.badRequest(response)
         }
-
-
 
 
         val type = body["type"]
 
-        responseTemp=InventoryReqValidation.isEsopTypeValid(type)
-        if(responseTemp !=null) {
+        responseTemp = InventoryReqValidation.isEsopTypeValid(type)
+        if (responseTemp != null) {
             errorList.add(responseTemp)
             response["error"] = errorList
             return HttpResponse.badRequest(response)

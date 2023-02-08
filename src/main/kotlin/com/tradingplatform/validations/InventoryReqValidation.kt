@@ -3,7 +3,6 @@ package com.tradingplatform.validations
 import com.tradingplatform.model.PlatformData
 import com.tradingplatform.model.User
 import io.micronaut.json.tree.JsonNode
-import io.micronaut.json.tree.JsonObject
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -37,7 +36,7 @@ class InventoryReqValidation {
         }
 
         fun isEsopTypeValid(type: JsonNode?): String? {
-            if (type!=null && (!type.isString || type.stringValue != "PERFORMANCE")) {
+            if (type != null && (!type.isString || type.stringValue != "PERFORMANCE")) {
                 return "ESOP type is invalid ( Allowed value : PERFORMANCE and NON-PERFORMANCE)"
             }
 

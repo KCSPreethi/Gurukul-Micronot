@@ -1,13 +1,13 @@
 package com.tradingplatform.controller
 
 import com.tradingplatform.data.UserRepo
-import com.tradingplatform.validations.OrderValidation
 import com.tradingplatform.model.*
 import com.tradingplatform.validations.OrderReqValidation
+import com.tradingplatform.validations.OrderValidation
+import com.tradingplatform.validations.UserReqValidation
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
 import io.micronaut.json.tree.JsonObject
-import com.tradingplatform.validations.UserReqValidation
 
 
 @Controller(value = "/user")

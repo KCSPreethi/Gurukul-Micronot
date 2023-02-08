@@ -1,9 +1,6 @@
 package com.tradingplatform.controller
 
 import com.tradingplatform.data.UserRepo
-import com.tradingplatform.model.BuyOrders
-import com.tradingplatform.model.CompletedOrders
-import com.tradingplatform.model.SellOrders
 import com.tradingplatform.model.User
 import com.tradingplatform.validations.maxLimitForWallet
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -19,6 +16,7 @@ class WalletControllerTest {
     fun `Remove all the Users and Orders`() {
         UserRepo.users.clear()
     }
+
     @Test
     fun `valid amount entered on post request`(spec: RequestSpecification) {
 
