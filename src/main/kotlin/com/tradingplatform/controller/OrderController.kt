@@ -2,6 +2,7 @@ package com.tradingplatform.controller
 
 import com.tradingplatform.data.UserRepo
 import com.tradingplatform.model.*
+import com.tradingplatform.service.UserService
 import com.tradingplatform.validations.OrderReqValidation
 import com.tradingplatform.validations.OrderValidation
 import com.tradingplatform.validations.UserReqValidation
@@ -13,6 +14,9 @@ import javax.validation.Valid
 @Validated
 @Controller(value = "/user")
 class OrderController {
+
+    val userService = UserService()
+
 
     @Get(value = "/{userName}/order")
     fun orderHistory(@QueryValue userName: String): Any? {
@@ -90,10 +94,13 @@ class OrderController {
 
 
     @Post(value = "/{userName}/order")
-    fun createOrder(@Body @Valid createOrderRequestBody: CreateOrderRequestBody, @QueryValue userName: String): Any {
+    fun  createOrder(@Body @Valid createOrderRequestBody: CreateOrderRequestBody, @QueryValue userName: String): Any {
+        val user = userService.getUser(userName)
+        println(user)
         var response: MutableMap<String, List<String>>? = UserReqValidation.isUserExists(userName)
         if (response != null)
             return HttpResponse.badRequest(response)
+
 
         val quantity = createOrderRequestBody.quantity!!.toInt()
         val type = createOrderRequestBody.type!!

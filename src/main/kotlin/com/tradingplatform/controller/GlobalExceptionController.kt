@@ -1,13 +1,13 @@
 package com.tradingplatform.controller
 
 import com.fasterxml.jackson.core.JsonParseException
+import com.tradingplatform.exception.UserNotFoundException
 import com.tradingplatform.model.ErrorResponse
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Error
-import io.micronaut.http.hateoas.JsonError
 import javax.validation.ConstraintViolationException
 
 @Controller
@@ -19,6 +19,10 @@ class GlobalExceptionController {
     @Error(global = true)
     fun constraintViolationError(error: ConstraintViolationException): HttpResponse<ErrorResponse> =
         HttpResponse.badRequest(ErrorResponse(error.constraintViolations.toList().map { it.message }))
+
+    @Error(global = true)
+    fun userNotFoundError(error: UserNotFoundException): HttpResponse<ErrorResponse> =
+        HttpResponse.notFound(ErrorResponse(error.errorList))
 
     @Error(status = HttpStatus.NOT_FOUND, global = true)
     fun notFoundError(): HttpResponse<ErrorResponse> =

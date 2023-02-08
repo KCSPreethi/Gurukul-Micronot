@@ -6,6 +6,7 @@ import com.tradingplatform.model.CompletedOrders
 import com.tradingplatform.model.SellOrders
 import com.tradingplatform.model.User
 import com.tradingplatform.validations.maxLimitForInventory
+import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.restassured.specification.RequestSpecification
 import org.hamcrest.Matchers
@@ -115,8 +116,8 @@ class OrderControllerTest {
             )
             .post("/user/atul/order")
             .then()
-            .statusCode(400).and()
-            .body("error", Matchers.contains("User does not exists"))
+            .statusCode(HttpStatus.NOT_FOUND.code).and()
+            .body("error", Matchers.contains("user does not exists"))
 
     }
 
