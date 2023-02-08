@@ -4,8 +4,8 @@ import com.tradingplatform.data.UserRepo
 import com.tradingplatform.model.User
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.restassured.specification.RequestSpecification
-import org.hamcrest.Matchers
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -102,7 +102,8 @@ class UserControllerTest {
                         "email": "atuafl@gmail.com",
                         "phoneNumber": 2123123
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/register")
             .then()
             .statusCode(400).and()

@@ -15,11 +15,11 @@ class UserController {
     @Post(value = "/register", consumes = [MediaType.APPLICATION_JSON], produces = [MediaType.APPLICATION_JSON])
     fun register(@Body body: JsonObject): MutableHttpResponse<*>? {
 
-        val response=UserReqValidation.isValidReq(body)
+        val response = UserReqValidation.isValidReq(body)
         if (response != null)
             return HttpResponse.badRequest(response)
 
-        val registerSuccessfullyResponse=registerUser(body)
+        val registerSuccessfullyResponse = registerUser(body)
 
         return HttpResponse.ok(registerSuccessfullyResponse)
     }

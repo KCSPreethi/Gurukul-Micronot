@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class NotFoundControllerTest {
 
     @Test
-    fun `return 404 with proper error message`(spec : RequestSpecification) {
+    fun `return 404 with proper error message`(spec: RequestSpecification) {
         spec.`when`()
             .get("/a")
             .then()

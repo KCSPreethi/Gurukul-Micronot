@@ -1,13 +1,9 @@
 package com.tradingplatform.validations
 
-import com.tradingplatform.data.UserRepo
 import com.tradingplatform.model.User
-import io.micronaut.json.tree.JsonObject
 
 const val maxLimitForWallet = 10000000
 const val maxLimitForInventory = 100000000
-
-
 
 
 class OrderValidation {

@@ -6,7 +6,7 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 
 @MicronautTest
-class InvalidJsonControllerTest{
+class InvalidJsonControllerTest {
     @Test
     fun `return 400 with proper error message for invalid json`(spec: RequestSpecification) {
         spec.`when`()

@@ -17,12 +17,14 @@ class InventoryControllerTest {
         UserRepo.addUser(user)
         spec.`when`()
             .header("Content-Type", "application/json")
-            .body("""
+            .body(
+                """
                 {
                     "quantity": 5,
                     "type": "PERFORMANCE"
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/${user.userName}/inventory")
             .then()
             .statusCode(200)
@@ -35,11 +37,13 @@ class InventoryControllerTest {
         UserRepo.addUser(user)
         spec.`when`()
             .header("Content-Type", "application/json")
-            .body("""
+            .body(
+                """
                 {
                     "type": "PERFORMANCE"
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/${user.userName}/inventory")
             .then()
             .statusCode(400)
@@ -52,11 +56,13 @@ class InventoryControllerTest {
         UserRepo.addUser(user)
         spec.`when`()
             .header("Content-Type", "application/json")
-            .body("""
+            .body(
+                """
                 {
                     "quantity": 10
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/${user.userName}/inventory")
             .then()
             .statusCode(200)
@@ -81,11 +87,13 @@ class InventoryControllerTest {
         UserRepo.addUser(user)
         spec.`when`()
             .header("Content-Type", "application/json")
-            .body("""
+            .body(
+                """
                 {
                     "quantity": 100000002
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/${user.userName}/inventory")
             .then()
             .statusCode(400).and()
@@ -99,11 +107,13 @@ class InventoryControllerTest {
         UserRepo.addUser(user)
         spec.`when`()
             .header("Content-Type", "application/json")
-            .body("""
+            .body(
+                """
                 {
                     "quantity": -5
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/${user.userName}/inventory")
             .then()
             .statusCode(400).and()
@@ -117,12 +127,14 @@ class InventoryControllerTest {
         UserRepo.addUser(user)
         spec.`when`()
             .header("Content-Type", "application/json")
-            .body("""
+            .body(
+                """
                 {
                     "quantity": 10,
                     "type": "abs"
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/${user.userName}/inventory")
             .then()
             .statusCode(400).and()
@@ -134,12 +146,14 @@ class InventoryControllerTest {
     fun `Proper error message when user not registered`(spec: RequestSpecification) {
         spec.`when`()
             .header("Content-Type", "application/json")
-            .body("""
+            .body(
+                """
                 {
                     "quantity": 5,
                     "type": "PERFORMANCE"
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/pcs/inventory")
             .then()
             .statusCode(400).and()
@@ -153,11 +167,13 @@ class InventoryControllerTest {
         UserRepo.addUser(user)
         spec.`when`()
             .header("Content-Type", "application/json")
-            .body("""
+            .body(
+                """
                 {
                     "quantity": "abc"
                 }
-            """.trimIndent())
+            """.trimIndent()
+            )
             .post("/user/pkcs/inventory")
             .then()
             .statusCode(400).and()

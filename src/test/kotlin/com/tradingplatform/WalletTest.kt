@@ -2,7 +2,7 @@ package com.tradingplatform
 
 
 import com.tradingplatform.data.UserRepo
-import com.tradingplatform.model.*
+import com.tradingplatform.model.User
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
