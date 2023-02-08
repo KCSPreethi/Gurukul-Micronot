@@ -7,9 +7,10 @@ import com.tradingplatform.validations.OrderValidation
 import com.tradingplatform.validations.UserReqValidation
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
-import io.micronaut.json.tree.JsonObject
+import io.micronaut.validation.Validated
+import javax.validation.Valid
 
-
+@Validated
 @Controller(value = "/user")
 class OrderController {
 
@@ -89,19 +90,15 @@ class OrderController {
 
 
     @Post(value = "/{userName}/order")
-    fun createOrder(@Body body: JsonObject, @QueryValue userName: String): Any {
+    fun createOrder(@Body @Valid createOrderRequestBody: CreateOrderRequestBody, @QueryValue userName: String): Any {
         var response: MutableMap<String, List<String>>? = UserReqValidation.isUserExists(userName)
         if (response != null)
             return HttpResponse.badRequest(response)
 
-        response = OrderReqValidation.validateRequest(body)
-        if (response != null)
-            return HttpResponse.badRequest(response)
-
-        val quantity = body["quantity"]!!.intValue
-        val type = body["type"]!!.stringValue
-        val price = body["price"]!!.intValue
-        val esopType = if (body["esopType"] !== null) body["esopType"]!!.stringValue else "NORMAL"
+        val quantity = createOrderRequestBody.quantity!!.toInt()
+        val type = createOrderRequestBody.type!!
+        val price = createOrderRequestBody.price!!.toInt()
+        val esopType = createOrderRequestBody.esopType!!
         response = OrderReqValidation.isValueValid(quantity, price, esopType)
         if (response != null)
             return HttpResponse.badRequest(response)

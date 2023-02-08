@@ -35,8 +35,8 @@ class OrderControllerTest {
             .statusCode(400).and()
             .body(
                 "error",
-                Matchers.contains(
-                    "Enter the quantity field", "Enter the type field", "Enter the price field"
+                Matchers.hasItems(
+                    "price field is blank", "type field is blank", "quantity field is blank"
                 )
             )
     }
@@ -52,9 +52,8 @@ class OrderControllerTest {
             .then()
             .statusCode(400).and()
             .body(
-                "error", Matchers.contains(
-                    "Enter the type field",
-                    "Enter the price field"
+                "error", Matchers.hasItems(
+                    "type field is blank", "price field is blank"
                 )
             )
     }
@@ -77,7 +76,7 @@ class OrderControllerTest {
             .post("/user/${user.userName}/order")
             .then()
             .statusCode(400).and()
-            .body("error", Matchers.contains("Enter a valid quantity"))
+            .body("error", Matchers.hasItems("quantity should be less than 10000000", "quantity should be positive"))
     }
 
     @Test
@@ -98,7 +97,7 @@ class OrderControllerTest {
             .post("/user/${user.userName}/order")
             .then()
             .statusCode(400).and()
-            .body("error", Matchers.contains("Order Type is not valid"))
+            .body("error", Matchers.contains("type field should be BUY or SELL"))
     }
 
     @Test
@@ -241,7 +240,7 @@ class OrderControllerTest {
             .post("/user/${user.userName}/order")
             .then()
             .statusCode(400).and()
-            .body("error", Matchers.contains("Enter a valid price"))
+            .body("error", Matchers.contains("price is more than 10000000"))
 
     }
 
@@ -263,7 +262,7 @@ class OrderControllerTest {
             .post("/user/${user.userName}/order")
             .then()
             .statusCode(400).and()
-            .body("error", Matchers.contains("Quantity is not valid. Range between 1 and $maxLimitForInventory"))
+            .body("error", Matchers.contains("quantity should be less than 10000000"))
     }
 
     @Test
@@ -285,7 +284,7 @@ class OrderControllerTest {
             .then()
             .statusCode(400).and().body(
                 "error",
-                Matchers.contains("Order Type is not valid")
+                Matchers.contains("type field should be BUY or SELL")
             )
     }
 }
