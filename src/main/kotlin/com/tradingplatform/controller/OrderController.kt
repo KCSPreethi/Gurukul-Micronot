@@ -34,64 +34,12 @@ class OrderController {
 
         val userOrderIds = user.orders
 
-        allOrdersOfUser.addAll(getAllCompletedOrdersOfUser(userOrderIds))
-        allOrdersOfUser.addAll(getAllPendingOrdersOfUser(userName))
+        allOrdersOfUser.addAll(orderService.getAllCompletedOrdersOfUser(userOrderIds))
+        allOrdersOfUser.addAll(orderService.getAllPendingOrdersOfUser(userName))
 
-        updateTransactionsOfOrder(allOrdersOfUser)
+        orderService.updateTransactionsOfOrder(allOrdersOfUser)
         return HttpResponse.ok(allOrdersOfUser)
 
-    }
-
-    private fun updateTransactionsOfOrder(allOrdersOfUser: MutableList<Order>) {
-        for (individualOrder in allOrdersOfUser) {
-
-            val transOfIndividualOrder = individualOrder.filled
-
-            val transAtSamePrice: ArrayList<PriceQtyPair> = arrayListOf()
-            val transIndexAtPrice: MutableMap<Int, Int> = mutableMapOf()
-
-            for (transPriceAndQty in transOfIndividualOrder) {
-                if (transIndexAtPrice.contains(transPriceAndQty.price)) {
-                    transAtSamePrice[transIndexAtPrice[transPriceAndQty.price]!!].quantity += transPriceAndQty.quantity
-                } else {
-                    transAtSamePrice.add(transPriceAndQty)
-                    transIndexAtPrice[transPriceAndQty.price] = transAtSamePrice.size - 1
-                }
-            }
-            individualOrder.filled = transAtSamePrice
-        }
-    }
-
-
-    private fun getAllCompletedOrdersOfUser(userOrderIds: ArrayList<Pair<Int, Int>>): MutableList<Order> {
-
-        val completedOrdersOfUser: MutableList<Order> = mutableListOf()
-        for (orderId in userOrderIds) {
-            if (CompletedOrders.containsKey(orderId)) {
-                val currOrder = CompletedOrders[orderId]
-                if (currOrder != null) {
-                    completedOrdersOfUser.add(currOrder)
-                }
-            }
-        }
-        return completedOrdersOfUser
-    }
-
-
-    private fun getAllPendingOrdersOfUser(userName: String): MutableList<Order> {
-
-        val pendingOrdersOfUser: MutableList<Order> = mutableListOf()
-        for (order in SellOrders) {
-            if (userName == order.user.userName) {
-                pendingOrdersOfUser.add(order)
-            }
-        }
-        for (order in BuyOrders) {
-            if (userName == order.user.userName) {
-                pendingOrdersOfUser.add(order)
-            }
-        }
-        return pendingOrdersOfUser
     }
 
 
