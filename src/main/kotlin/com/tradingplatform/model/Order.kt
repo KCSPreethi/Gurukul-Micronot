@@ -12,11 +12,11 @@ const val esopPerformance = 1
 
 data class PriceQtyPair(val price: Int, var quantity: Int) //Utility class to make the response json pretty
 data class Order(val type: String, val qty: Int, val price: Int, val user: User, val esopType: Int = esopNormal) {
-    var status = "unfilled"
+    private var status = "unfilled"
     var filled = ArrayList<PriceQtyPair>()
     val id: Pair<Int, Int> = Pair(BuyOrders.size + SellOrders.size + CompletedOrders.size * 2, esopType)
     val timestamp = System.currentTimeMillis()
-    var filledQty = 0
+    private var filledQty = 0
 
     // The match orders function has to be called here
     init {
