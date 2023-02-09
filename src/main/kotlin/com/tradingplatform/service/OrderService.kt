@@ -41,7 +41,6 @@ class OrderService {
     }
 
     fun orderHandler(userName: String, type: String, quantity: Int, price: Int, esopType: String = "NORMAL"): Any {
-        val errorList = arrayListOf<String>()
         val response = mutableMapOf<String, Any>()
         var newOrder: Order? = null
 
@@ -69,11 +68,6 @@ class OrderService {
                 newOrder = Order("SELL", quantity, price, user, esopNormal)
                 user.orders.add(newOrder.id)
             }
-        }
-
-        response["error"] = errorList
-        if (errorList.isNotEmpty()) {
-            return HttpResponse.badRequest(response)
         }
 
         response["orderId"] = newOrder!!.id.first
