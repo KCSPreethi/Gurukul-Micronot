@@ -103,10 +103,19 @@ class OrderController {
         userService.canPlaceOrder(user, createOrderRequestBody)
         val order: Order = orderService.placeOrder(createOrderRequestBody, user)
         println(order)
+        userService.updateInventoryAndWallet(user,order)
+
+
+        //Match order os
+
+        //Update wi
 
         val quantity = createOrderRequestBody.quantity!!.toInt()
         val type = createOrderRequestBody.type!!
         val price = createOrderRequestBody.price!!.toInt()
+        val esopType = createOrderRequestBody.esopType!!
+
+//        return orderHandler(userName, type, quantity, price, esopType)
         val response = mutableMapOf<String, Any>()
 
         response["orderId"] = order!!.id.first
