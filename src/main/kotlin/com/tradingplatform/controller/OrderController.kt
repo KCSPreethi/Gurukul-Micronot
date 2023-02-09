@@ -3,19 +3,20 @@ package com.tradingplatform.controller
 import com.tradingplatform.data.UserRepo
 import com.tradingplatform.model.*
 import com.tradingplatform.service.UserService
-import com.tradingplatform.validations.OrderReqValidation
 import com.tradingplatform.validations.OrderValidation
-import com.tradingplatform.validations.UserReqValidation
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
 import io.micronaut.validation.Validated
+import jakarta.inject.Inject
 import javax.validation.Valid
 
 @Validated
 @Controller(value = "/user")
 class OrderController {
 
-    val userService = UserService()
+    @Inject
+    lateinit var userService: UserService
 
 
     @Get(value = "/{userName}/order")
@@ -94,21 +95,21 @@ class OrderController {
 
 
     @Post(value = "/{userName}/order")
-    fun  createOrder(@Body @Valid createOrderRequestBody: CreateOrderRequestBody, @QueryValue userName: String): Any {
+    fun createOrder(@Body @Valid createOrderRequestBody: CreateOrderRequestBody, @QueryValue userName: String): Any {
         val user = userService.getUser(userName)
-        println(user)
-        var response: MutableMap<String, List<String>>? = UserReqValidation.isUserExists(userName)
-        if (response != null)
-            return HttpResponse.badRequest(response)
+        userService.canPlaceOrder(user, createOrderRequestBody)
+        //Place order - order service
 
+        //User update wallet inv
+
+        //Match order os
+
+        //Update wi
 
         val quantity = createOrderRequestBody.quantity!!.toInt()
         val type = createOrderRequestBody.type!!
         val price = createOrderRequestBody.price!!.toInt()
         val esopType = createOrderRequestBody.esopType!!
-        response = OrderReqValidation.isValueValid(quantity, price, esopType)
-        if (response != null)
-            return HttpResponse.badRequest(response)
 
         return orderHandler(userName, type, quantity, price, esopType)
     }
