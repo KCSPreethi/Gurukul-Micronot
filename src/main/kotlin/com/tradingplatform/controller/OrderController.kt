@@ -2,6 +2,7 @@ package com.tradingplatform.controller
 
 import com.tradingplatform.data.UserRepo
 import com.tradingplatform.model.*
+import com.tradingplatform.service.OrderService
 import com.tradingplatform.service.UserService
 import com.tradingplatform.validations.OrderValidation
 import io.micronaut.core.annotation.Introspected
@@ -17,6 +18,8 @@ class OrderController {
 
     @Inject
     lateinit var userService: UserService
+    @Inject
+    lateinit var orderService: OrderService
 
 
     @Get(value = "/{userName}/order")
@@ -98,20 +101,20 @@ class OrderController {
     fun createOrder(@Body @Valid createOrderRequestBody: CreateOrderRequestBody, @QueryValue userName: String): Any {
         val user = userService.getUser(userName)
         userService.canPlaceOrder(user, createOrderRequestBody)
-        //Place order - order service
-
-        //User update wallet inv
-
-        //Match order os
-
-        //Update wi
+        val order: Order = orderService.placeOrder(createOrderRequestBody, user)
+        println(order)
 
         val quantity = createOrderRequestBody.quantity!!.toInt()
         val type = createOrderRequestBody.type!!
         val price = createOrderRequestBody.price!!.toInt()
-        val esopType = createOrderRequestBody.esopType!!
+        val response = mutableMapOf<String, Any>()
 
-        return orderHandler(userName, type, quantity, price, esopType)
+        response["orderId"] = order!!.id.first
+        response["quantity"] = quantity
+        response["type"] = type
+        response["price"] = price
+
+        return HttpResponse.ok(response)
     }
 
     fun orderHandler(userName: String, type: String, quantity: Int, price: Int, esopType: String = "NORMAL"): Any {
