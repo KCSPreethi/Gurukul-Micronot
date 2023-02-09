@@ -1,6 +1,6 @@
 package com.tradingplatform
 
-import com.tradingplatform.controller.OrderController
+import com.tradingplatform.service.OrderService
 import com.tradingplatform.data.UserRepo
 import com.tradingplatform.model.BuyOrders
 import com.tradingplatform.model.CompletedOrders
@@ -27,10 +27,10 @@ class OrderMatchingTest {
         val user1 = User("", "", "", "", "atul_1")
         UserRepo.users[user1.userName] = user1
         user1.wallet.addAmountToFree(100)
-        val objectOfOrderController = OrderController()
+        val orderService = OrderService()
 
         //Act
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 1, 20, "NORMAL")
+        orderService.orderHandler(user1.userName, "BUY", 1, 20, "NORMAL")
 
         //Assert
         Assertions.assertEquals(80, user1.wallet.getFreeAmount())
@@ -48,9 +48,9 @@ class OrderMatchingTest {
         user2.inventory.esopNormal.free = 10
 
         //Act
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 5, 20)
-        objectOfOrderController.orderHandler(user2.userName, "SELL", 2, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "BUY", 5, 20)
+        orderService.orderHandler(user2.userName, "SELL", 2, 20)
 
 
         //Assert
@@ -78,9 +78,9 @@ class OrderMatchingTest {
         user2.inventory.esopPerformance.free = 10
 
         //Act
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user2.userName, "SELL", 2, 20, "PERFORMANCE")
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 5, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user2.userName, "SELL", 2, 20, "PERFORMANCE")
+        orderService.orderHandler(user1.userName, "BUY", 5, 20)
 
 
         //Assert
@@ -109,9 +109,9 @@ class OrderMatchingTest {
 
 
         //Act
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "SELL", 10, 20)
-        objectOfOrderController.orderHandler(user2.userName, "BUY", 5, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "SELL", 10, 20)
+        orderService.orderHandler(user2.userName, "BUY", 5, 20)
 
 
         //Assert
@@ -138,9 +138,9 @@ class OrderMatchingTest {
         user2.inventory.esopPerformance.free = 10
 
         //Act
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 5, 20)
-        objectOfOrderController.orderHandler(user2.userName, "SELL", 2, 20, "PERFORMANCE")
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "BUY", 5, 20)
+        orderService.orderHandler(user2.userName, "SELL", 2, 20, "PERFORMANCE")
 
 
         //Assert
@@ -167,7 +167,7 @@ class OrderMatchingTest {
 
         //Act
 
-        OrderController().orderHandler(user1.userName, "SELL", 10, 100, "PERFORMANCE")
+        OrderService().orderHandler(user1.userName, "SELL", 10, 100, "PERFORMANCE")
 
         //Assert
         Assertions.assertEquals(40, user1.inventory.esopNormal.free)
@@ -188,12 +188,12 @@ class OrderMatchingTest {
         val user2 = User("", "", "", "", "atul_2")
         UserRepo.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user2.userName, "SELL", 2, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user2.userName, "SELL", 2, 20)
 
 
         //Act
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 2, 20)
+        orderService.orderHandler(user1.userName, "BUY", 2, 20)
 
 
         //Assert
@@ -217,11 +217,11 @@ class OrderMatchingTest {
         val user2 = User("", "", "", "", "atul_2")
         UserRepo.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 2, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "BUY", 2, 20)
 
         //Act
-        objectOfOrderController.orderHandler(user2.userName, "SELL", 2, 20)
+        orderService.orderHandler(user2.userName, "SELL", 2, 20)
 
         //Assert
         Assertions.assertEquals(60, user1.wallet.getFreeAmount())
@@ -245,13 +245,13 @@ class OrderMatchingTest {
         val user2 = User("", "", "", "", "atul_2")
         UserRepo.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 2, 20)
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 2, 30)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "BUY", 2, 20)
+        orderService.orderHandler(user1.userName, "BUY", 2, 30)
 
 
         //Act
-        objectOfOrderController.orderHandler(user2.userName, "SELL", 2, 20)
+        orderService.orderHandler(user2.userName, "SELL", 2, 20)
 
         //Assert
         Assertions.assertEquals(40, user1.wallet.getLockedAmount())
@@ -274,13 +274,13 @@ class OrderMatchingTest {
         val user2 = User("", "", "", "", "atul_2")
         UserRepo.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 2, 30)
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 2, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "BUY", 2, 30)
+        orderService.orderHandler(user1.userName, "BUY", 2, 20)
 
 
         //Act
-        objectOfOrderController.orderHandler(user2.userName, "SELL", 2, 20)
+        orderService.orderHandler(user2.userName, "SELL", 2, 20)
 
         //Assert
         Assertions.assertEquals(40, user1.wallet.getLockedAmount())
@@ -304,13 +304,13 @@ class OrderMatchingTest {
         val user2 = User("", "", "", "", "atul_2")
         UserRepo.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 2, 20)
-        objectOfOrderController.orderHandler(user1.userName, "BUY", 2, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "BUY", 2, 20)
+        orderService.orderHandler(user1.userName, "BUY", 2, 20)
 
 
         //Act
-        objectOfOrderController.orderHandler(user2.userName, "SELL", 2, 20)
+        orderService.orderHandler(user2.userName, "SELL", 2, 20)
 
 
         //Assert
@@ -335,13 +335,13 @@ class OrderMatchingTest {
         val user2 = User("", "", "", "", "atul_2")
         UserRepo.users[user2.userName] = user2
         user2.wallet.addAmountToFree(100)
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "SELL", 2, 20)
-        objectOfOrderController.orderHandler(user1.userName, "SELL", 2, 30)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "SELL", 2, 20)
+        orderService.orderHandler(user1.userName, "SELL", 2, 30)
 
 
         //Act
-        objectOfOrderController.orderHandler(user2.userName, "BUY", 2, 20)
+        orderService.orderHandler(user2.userName, "BUY", 2, 20)
 
 
         //Assert
@@ -366,12 +366,12 @@ class OrderMatchingTest {
         val user2 = User("", "", "", "", "atul_2")
         UserRepo.users[user2.userName] = user2
         user2.wallet.addAmountToFree(100)
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "SELL", 2, 30)
-        objectOfOrderController.orderHandler(user1.userName, "SELL", 2, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "SELL", 2, 30)
+        orderService.orderHandler(user1.userName, "SELL", 2, 20)
 
         //Act
-        objectOfOrderController.orderHandler(user2.userName, "BUY", 2, 20)
+        orderService.orderHandler(user2.userName, "BUY", 2, 20)
 
         //Assert
         Assertions.assertEquals(0, user1.wallet.getLockedAmount())
@@ -394,12 +394,12 @@ class OrderMatchingTest {
         val user2 = User("", "", "", "", "atul_2")
         UserRepo.users[user2.userName] = user2
         user2.wallet.addAmountToFree(100)
-        val objectOfOrderController = OrderController()
-        objectOfOrderController.orderHandler(user1.userName, "SELL", 2, 20)
-        objectOfOrderController.orderHandler(user1.userName, "SELL", 2, 20)
+        val orderService = OrderService()
+        orderService.orderHandler(user1.userName, "SELL", 2, 20)
+        orderService.orderHandler(user1.userName, "SELL", 2, 20)
 
         //Act
-        objectOfOrderController.orderHandler(user2.userName, "BUY", 2, 20)
+        orderService.orderHandler(user2.userName, "BUY", 2, 20)
 
         //Assert
         Assertions.assertEquals(0, user1.wallet.getLockedAmount())
