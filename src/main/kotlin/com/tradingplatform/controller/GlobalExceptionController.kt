@@ -1,6 +1,7 @@
 package com.tradingplatform.controller
 
 import com.fasterxml.jackson.core.JsonParseException
+import com.tradingplatform.exception.PlaceOrderException
 import com.tradingplatform.exception.UserNotFoundException
 import com.tradingplatform.model.ErrorResponse
 import io.micronaut.http.HttpRequest
@@ -24,13 +25,18 @@ class GlobalExceptionController {
     fun userNotFoundError(error: UserNotFoundException): HttpResponse<ErrorResponse> =
         HttpResponse.notFound(ErrorResponse(error.errorList))
 
+    @Error(global = true)
+    fun placerOrderError(error: PlaceOrderException): HttpResponse<ErrorResponse> =
+        HttpResponse.badRequest(ErrorResponse(error.errorList))
+
+
     @Error(status = HttpStatus.NOT_FOUND, global = true)
     fun notFoundError(): HttpResponse<ErrorResponse> =
         HttpResponse.notFound(ErrorResponse(listOf("invalid endpoint")))
 
     @Error(global = true)
     fun emptyJsonError(request: HttpRequest<*>, e: Throwable): HttpResponse<ErrorResponse> {
-        return HttpResponse.badRequest(ErrorResponse(listOf(e.message?:"")))
+        return HttpResponse.badRequest(ErrorResponse(listOf(e.message ?: "")))
     }
 
 }
