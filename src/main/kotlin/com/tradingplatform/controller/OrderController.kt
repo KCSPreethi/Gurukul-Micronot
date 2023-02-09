@@ -4,12 +4,9 @@ import com.tradingplatform.data.UserRepo
 import com.tradingplatform.model.*
 import com.tradingplatform.service.OrderService
 import com.tradingplatform.service.UserService
-import com.tradingplatform.validations.OrderValidation
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
 import io.micronaut.validation.Validated
-import jakarta.inject.Inject
 import javax.validation.Valid
 
 @Validated

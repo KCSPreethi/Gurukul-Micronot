@@ -1,11 +1,11 @@
 package com.tradingplatform
 
-import com.tradingplatform.service.OrderService
+import com.tradingplatform.data.OrderRepository.Companion.BuyOrders
+import com.tradingplatform.data.OrderRepository.Companion.CompletedOrders
+import com.tradingplatform.data.OrderRepository.Companion.SellOrders
 import com.tradingplatform.data.UserRepo
-import com.tradingplatform.model.BuyOrders
-import com.tradingplatform.model.CompletedOrders
-import com.tradingplatform.model.SellOrders
 import com.tradingplatform.model.User
+import com.tradingplatform.service.OrderService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
