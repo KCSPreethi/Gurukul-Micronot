@@ -4,6 +4,7 @@ import com.tradingplatform.data.OrderRepository.Companion.BuyOrders
 import com.tradingplatform.data.OrderRepository.Companion.CompletedOrders
 import com.tradingplatform.data.OrderRepository.Companion.SellOrders
 import com.tradingplatform.data.UserRepository
+import com.tradingplatform.model.CreateOrderRequestBody
 import com.tradingplatform.model.User
 import com.tradingplatform.service.OrderService
 import org.junit.jupiter.api.Assertions
@@ -30,7 +31,7 @@ class OrderMatchingTest {
         val orderService = OrderService()
 
         //Act
-        orderService.orderHandler(user1.userName, "BUY", 1, 20, "NORMAL")
+        OrderService().placeOrder(CreateOrderRequestBody("1", "BUY", "20", "NORMAL"), user1)
 
         //Assert
         Assertions.assertEquals(80, user1.wallet.getFreeAmount())
@@ -49,9 +50,8 @@ class OrderMatchingTest {
 
         //Act
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "BUY", 5, 20)
-        orderService.orderHandler(user2.userName, "SELL", 2, 20)
-
+        orderService.placeOrder(CreateOrderRequestBody("5", "BUY", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user2)
 
         //Assert
         Assertions.assertEquals(0, user1.wallet.getFreeAmount())
@@ -79,8 +79,8 @@ class OrderMatchingTest {
 
         //Act
         val orderService = OrderService()
-        orderService.orderHandler(user2.userName, "SELL", 2, 20, "PERFORMANCE")
-        orderService.orderHandler(user1.userName, "BUY", 5, 20)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20", "PERFORMANCE"), user2)
+        orderService.placeOrder(CreateOrderRequestBody("5", "BUY", "20"), user1)
 
 
         //Assert
@@ -110,9 +110,8 @@ class OrderMatchingTest {
 
         //Act
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "SELL", 10, 20)
-        orderService.orderHandler(user2.userName, "BUY", 5, 20)
-
+        orderService.placeOrder(CreateOrderRequestBody("10", "SELL", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("5", "BUY", "20"), user2)
 
         //Assert
         Assertions.assertEquals(98, user1.wallet.getFreeAmount())
@@ -139,9 +138,8 @@ class OrderMatchingTest {
 
         //Act
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "BUY", 5, 20)
-        orderService.orderHandler(user2.userName, "SELL", 2, 20, "PERFORMANCE")
-
+        orderService.placeOrder(CreateOrderRequestBody("5", "BUY", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20","PERFORMANCE"), user2)
 
         //Assert
         Assertions.assertEquals(0, user1.wallet.getFreeAmount())
@@ -152,7 +150,8 @@ class OrderMatchingTest {
         Assertions.assertEquals(40, user2.wallet.getFreeAmount())
         Assertions.assertEquals(8, user2.inventory.esopPerformance.free)
         Assertions.assertEquals(0, user2.inventory.esopPerformance.locked)
-        Assertions.assertEquals(0, user2.wallet.getLockedAmount())
+        Assertions.assertEquals(0, user2
+            .wallet.getLockedAmount())
     }
 
 
@@ -166,8 +165,7 @@ class OrderMatchingTest {
         user1.wallet.addAmountToFree(100)
 
         //Act
-
-        OrderService().orderHandler(user1.userName, "SELL", 10, 100, "PERFORMANCE")
+        OrderService().placeOrder(CreateOrderRequestBody("10", "SELL", "100", "PERFORMANCE"), user1)
 
         //Assert
         Assertions.assertEquals(40, user1.inventory.esopNormal.free)
@@ -189,12 +187,9 @@ class OrderMatchingTest {
         UserRepository.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
         val orderService = OrderService()
-        orderService.orderHandler(user2.userName, "SELL", 2, 20)
-
-
         //Act
-        orderService.orderHandler(user1.userName, "BUY", 2, 20)
-
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user2)
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user1)
 
         //Assert
         Assertions.assertEquals(60, user1.wallet.getFreeAmount())
@@ -218,10 +213,10 @@ class OrderMatchingTest {
         UserRepository.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "BUY", 2, 20)
 
         //Act
-        orderService.orderHandler(user2.userName, "SELL", 2, 20)
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user2)
 
         //Assert
         Assertions.assertEquals(60, user1.wallet.getFreeAmount())
@@ -246,12 +241,12 @@ class OrderMatchingTest {
         UserRepository.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "BUY", 2, 20)
-        orderService.orderHandler(user1.userName, "BUY", 2, 30)
-
 
         //Act
-        orderService.orderHandler(user2.userName, "SELL", 2, 20)
+
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "30"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user2)
 
         //Assert
         Assertions.assertEquals(40, user1.wallet.getLockedAmount())
@@ -275,12 +270,11 @@ class OrderMatchingTest {
         UserRepository.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "BUY", 2, 30)
-        orderService.orderHandler(user1.userName, "BUY", 2, 20)
-
-
         //Act
-        orderService.orderHandler(user2.userName, "SELL", 2, 20)
+
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "30"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user2)
 
         //Assert
         Assertions.assertEquals(40, user1.wallet.getLockedAmount())
@@ -305,13 +299,11 @@ class OrderMatchingTest {
         UserRepository.users[user2.userName] = user2
         user2.inventory.esopNormal.free = 10
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "BUY", 2, 20)
-        orderService.orderHandler(user1.userName, "BUY", 2, 20)
-
 
         //Act
-        orderService.orderHandler(user2.userName, "SELL", 2, 20)
-
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user2)
 
         //Assert
         Assertions.assertEquals(40, user1.wallet.getLockedAmount())
@@ -325,7 +317,6 @@ class OrderMatchingTest {
         Assertions.assertEquals(0, user2.wallet.getLockedAmount())
     }
 
-
     @Test
     fun `Check match of buy order with 2 sell order , first sell at low price than second sell price`() {
         //Arrange
@@ -336,13 +327,10 @@ class OrderMatchingTest {
         UserRepository.users[user2.userName] = user2
         user2.wallet.addAmountToFree(100)
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "SELL", 2, 20)
-        orderService.orderHandler(user1.userName, "SELL", 2, 30)
-
-
         //Act
-        orderService.orderHandler(user2.userName, "BUY", 2, 20)
-
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "30"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user2)
 
         //Assert
         Assertions.assertEquals(0, user1.wallet.getLockedAmount())
@@ -367,11 +355,11 @@ class OrderMatchingTest {
         UserRepository.users[user2.userName] = user2
         user2.wallet.addAmountToFree(100)
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "SELL", 2, 30)
-        orderService.orderHandler(user1.userName, "SELL", 2, 20)
-
         //Act
-        orderService.orderHandler(user2.userName, "BUY", 2, 20)
+
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "30"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user2)
 
         //Assert
         Assertions.assertEquals(0, user1.wallet.getLockedAmount())
@@ -395,11 +383,11 @@ class OrderMatchingTest {
         UserRepository.users[user2.userName] = user2
         user2.wallet.addAmountToFree(100)
         val orderService = OrderService()
-        orderService.orderHandler(user1.userName, "SELL", 2, 20)
-        orderService.orderHandler(user1.userName, "SELL", 2, 20)
 
         //Act
-        orderService.orderHandler(user2.userName, "BUY", 2, 20)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "SELL", "20"), user1)
+        orderService.placeOrder(CreateOrderRequestBody("2", "BUY", "20"), user2)
 
         //Assert
         Assertions.assertEquals(0, user1.wallet.getLockedAmount())

@@ -1,7 +1,9 @@
 package com.tradingplatform.controller
 
 import com.tradingplatform.data.UserRepository
-import com.tradingplatform.model.*
+import com.tradingplatform.model.CreateOrderRequestBody
+import com.tradingplatform.model.Order
+import com.tradingplatform.model.User
 import com.tradingplatform.service.OrderService
 import com.tradingplatform.service.UserService
 import io.micronaut.http.HttpResponse
@@ -44,10 +46,6 @@ class OrderController {
     fun createOrder(@Body @Valid createOrderRequestBody: CreateOrderRequestBody, @QueryValue userName: String): Any {
         val user = userService.getUser(userName)
         userService.canPlaceOrder(user, createOrderRequestBody)
-        val quantity = createOrderRequestBody.quantity!!.toInt()
-        val type = createOrderRequestBody.type!!
-        val price = createOrderRequestBody.price!!.toInt()
-        val esopType = createOrderRequestBody.esopType!!
-        return orderService.orderHandler(userName, type, quantity, price, esopType)
+        return orderService.placeOrder(createOrderRequestBody, user)
     }
 }
