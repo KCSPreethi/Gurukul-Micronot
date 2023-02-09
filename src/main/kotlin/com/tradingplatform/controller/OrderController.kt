@@ -1,6 +1,6 @@
 package com.tradingplatform.controller
 
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.UserRepository
 import com.tradingplatform.model.*
 import com.tradingplatform.service.OrderService
 import com.tradingplatform.service.UserService
@@ -22,7 +22,7 @@ class OrderController {
         val errorList = arrayListOf<String>()
         val response = mutableMapOf<String, MutableList<String>>()
         val allOrdersOfUser: MutableList<Order> = mutableListOf()
-        val user = UserRepo.getUser(userName)
+        val user = UserRepository.getUser(userName)
         if (user !is User) {
             errorList.add("User does not exists")
             response["error"] = errorList

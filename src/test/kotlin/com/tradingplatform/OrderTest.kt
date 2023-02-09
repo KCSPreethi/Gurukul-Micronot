@@ -3,7 +3,7 @@ package com.tradingplatform
 import com.tradingplatform.data.OrderRepository.Companion.BuyOrders
 import com.tradingplatform.data.OrderRepository.Companion.CompletedOrders
 import com.tradingplatform.data.OrderRepository.Companion.SellOrders
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.UserRepository
 import org.junit.jupiter.api.BeforeEach
 
 class OrderTest {
@@ -14,7 +14,7 @@ class OrderTest {
         CompletedOrders.clear()
         BuyOrders.clear()
         SellOrders.clear()
-        UserRepo.users.clear()
+        UserRepository.users.clear()
     }
 
 

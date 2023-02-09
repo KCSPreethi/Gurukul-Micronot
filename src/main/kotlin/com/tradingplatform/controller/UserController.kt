@@ -1,6 +1,6 @@
 package com.tradingplatform.controller
 
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.UserRepository
 import com.tradingplatform.model.*
 import com.tradingplatform.validations.UserReqValidation
 import io.micronaut.http.HttpResponse
@@ -40,7 +40,7 @@ class UserController {
             phoneNumber = phoneNumber
         )
 
-        UserRepo.addUser(userData)
+        UserRepository.addUser(userData)
 
         okResponse["message"] = "User registered successfully"
         return okResponse
@@ -56,7 +56,7 @@ class UserController {
         if (errorResponse != null)
             return HttpResponse.badRequest(errorResponse)
 
-        val user = UserRepo.getUser(userName)!!
+        val user = UserRepository.getUser(userName)!!
 
         val wallet = mutableMapOf<String, Int>()
         wallet["free"] = user.wallet.getFreeAmount()

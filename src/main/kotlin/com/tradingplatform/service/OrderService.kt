@@ -46,7 +46,7 @@ class OrderService {
         var newOrder: Order? = null
 
 
-        val user = UserRepo.getUser(userName)!!
+        val user = UserRepository.getUser(userName)!!
 
 
         val totalAmount = quantity * price

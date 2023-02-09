@@ -1,6 +1,6 @@
 package com.tradingplatform.controller
 
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.UserRepository
 import com.tradingplatform.model.User
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.restassured.specification.RequestSpecification
@@ -14,7 +14,7 @@ class UserControllerTest {
 
     @BeforeEach
     fun setUp() {
-        UserRepo.users.clear()
+        UserRepository.users.clear()
     }
 
     @Test
@@ -53,7 +53,7 @@ class UserControllerTest {
             phoneNumber = "+912345678977",
             userName = "atul_99"
         )
-        UserRepo.addUser(user)
+        UserRepository.addUser(user)
 
         //Assert
         spec.`when`().get("/user/atul_99/accountInformation").then().statusCode(200).and()

@@ -2,7 +2,7 @@ package com.tradingplatform.data
 
 import com.tradingplatform.model.User
 
-class UserRepo {
+class UserRepository {
     companion object {
         var users = HashMap<String, User>()
         fun getUser(userName: String): User? {

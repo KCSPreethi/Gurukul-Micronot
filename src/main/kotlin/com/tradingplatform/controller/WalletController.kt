@@ -1,6 +1,6 @@
 package com.tradingplatform.controller
 
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.UserRepository
 import com.tradingplatform.validations.UserReqValidation
 import com.tradingplatform.validations.WalletReqValidation
 import io.micronaut.http.HttpResponse
@@ -24,7 +24,7 @@ class WalletController {
         val errorResponse = UserReqValidation.isUserExists(userName)
         if (errorResponse != null)
             return HttpResponse.badRequest(errorResponse)
-        val user = UserRepo.getUser(userName)!!
+        val user = UserRepository.getUser(userName)!!
 
         val amount: JsonNode? = body["amount"]
         errorList.addAll(WalletReqValidation.checkWalletValidations(amount, user))
