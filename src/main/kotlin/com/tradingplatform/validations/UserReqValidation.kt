@@ -1,6 +1,6 @@
 package com.tradingplatform.validations
 
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.UserRepository
 import com.tradingplatform.model.User
 import io.micronaut.json.tree.JsonObject
 
@@ -49,7 +49,7 @@ class UserReqValidation {
 
         private fun isEmailUnique(email: String): List<String> {
             val errorList = arrayListOf<String>()
-            for (user in UserRepo.users) {
+            for (user in UserRepository.users) {
                 if (user.value.email == email) {
                     errorList.add("email is already registered")
                 }
@@ -68,7 +68,7 @@ class UserReqValidation {
         }
 
         private fun isPhoneUnique(phoneNumber: String): Boolean {
-            for (user in UserRepo.users) {
+            for (user in UserRepository.users) {
                 if (user.value.phoneNumber == phoneNumber) {
                     return false
                 }
@@ -88,7 +88,7 @@ class UserReqValidation {
         }
 
         private fun isUnameUnique(userName: String): Boolean {
-            for (user in UserRepo.users) {
+            for (user in UserRepository.users) {
                 if (user.value.userName == userName) {
                     return false
                 }
@@ -114,7 +114,7 @@ class UserReqValidation {
 
             val response = mutableMapOf<String, List<String>>()
 
-            if (UserRepo.getUser(userName) !is User) {
+            if (UserRepository.getUser(userName) !is User) {
                 response["error"] = listOf("User does not exists")
                 return response
             }

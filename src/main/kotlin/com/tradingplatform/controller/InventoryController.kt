@@ -1,6 +1,6 @@
 package com.tradingplatform.controller
 
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.UserRepository
 import com.tradingplatform.model.User
 import com.tradingplatform.validations.InventoryReqValidation
 import com.tradingplatform.validations.UserReqValidation
@@ -29,7 +29,7 @@ class InventoryController {
         if (errorResponse != null)
             return HttpResponse.badRequest(errorResponse)
 
-        val user = UserRepo.getUser(userName)!!
+        val user = UserRepository.getUser(userName)!!
 
         var responseTemp = InventoryReqValidation.isQuantityNull(body["quantity"])
         if (responseTemp != null) {

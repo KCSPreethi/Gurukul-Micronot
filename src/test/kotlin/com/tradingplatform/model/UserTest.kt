@@ -1,7 +1,7 @@
 package com.tradingplatform.model
 
 
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.UserRepository
 import com.tradingplatform.validations.UserReqValidation
 
 import org.junit.jupiter.api.Assertions
@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.CsvSource
 class UserTest {
     @BeforeEach
     fun `Tear down existing data`() {
-        UserRepo.users.clear()
+        UserRepository.users.clear()
     }
 
     @ParameterizedTest
@@ -126,7 +126,7 @@ class UserTest {
             firstName = "Atul", lastName = "Tiwari", email = "atul@gmail.com", phoneNumber = "+919877678987",
             userName = "atul"
         )
-        UserRepo.addUser(user)
+        UserRepository.addUser(user)
         val actualResponse = UserReqValidation.isUserNameValid("atul")
 
         Assertions.assertEquals(1, actualResponse.size)
@@ -139,7 +139,7 @@ class UserTest {
             firstName = "Atul", lastName = "Tiwari", email = "atul@gmail.com", phoneNumber = "+919877678987",
             userName = "atul"
         )
-        UserRepo.addUser(user)
+        UserRepository.addUser(user)
         val actualResponse = UserReqValidation.isPhoneValid("+919877678987")
 
         Assertions.assertEquals(1, actualResponse.size)
