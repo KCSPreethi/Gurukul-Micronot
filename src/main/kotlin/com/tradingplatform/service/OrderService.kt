@@ -1,6 +1,9 @@
 package com.tradingplatform.service
 
-import com.tradingplatform.data.UserRepo
+import com.tradingplatform.data.*
+import com.tradingplatform.data.OrderRepository.Companion.BuyOrders
+import com.tradingplatform.data.OrderRepository.Companion.CompletedOrders
+import com.tradingplatform.data.OrderRepository.Companion.SellOrders
 import com.tradingplatform.exception.PlaceOrderException
 import com.tradingplatform.model.*
 import io.micronaut.http.HttpResponse

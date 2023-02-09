@@ -4,7 +4,6 @@ import com.tradingplatform.data.UserRepo
 import com.tradingplatform.exception.PlaceOrderException
 import com.tradingplatform.exception.UserNotFoundException
 import com.tradingplatform.model.*
-import jakarta.inject.Singleton
 
 class UserService {
     fun getUser(userName: String): User {
