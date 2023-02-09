@@ -10,9 +10,8 @@ class InventoryTest {
 
     @Test
     fun `check whether Performance esops added to inventory`() {
-        val userRepo = UserRepo()
         val user = User("", "", "", "tt@gmail.com", "atul_1")
-        userRepo.addUser(user)
+        UserRepo.addUser(user)
         val objectOfInventoryController = InventoryController()
 
 
