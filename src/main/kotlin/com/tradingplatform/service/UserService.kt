@@ -3,9 +3,7 @@ package com.tradingplatform.service
 import com.tradingplatform.data.UserRepo
 import com.tradingplatform.exception.PlaceOrderException
 import com.tradingplatform.exception.UserNotFoundException
-import com.tradingplatform.model.CreateOrderRequestBody
-import com.tradingplatform.model.PlatformData
-import com.tradingplatform.model.User
+import com.tradingplatform.model.*
 import jakarta.inject.Singleton
 
 @Singleton
@@ -25,6 +23,67 @@ class UserService {
             "SELL" -> canPlaceSellOrder(esopType, quantity, user, totalAmount)
         }
     }
+
+    fun updateInventoryAndWallet(user: User, order: Order) {
+        val quantity = order.qty
+        val esopType = order.esopType
+        val totalAmount = quantity * order.price
+        when (order.type) {
+            "BUY" -> updateUserWallet(user, totalAmount, quantity, order)
+            else -> {
+                updateUserInventory(esopType, user, quantity, totalAmount, order)
+            }
+        }
+    }
+
+    private fun updateUserInventory(
+        esopType: Int,
+        user: User,
+        quantity: Int,
+        totalAmount: Int,
+        order: Order
+    ) {
+        when (esopType) {
+            esopPerformance -> updateUserPerformanceInventory(user, quantity, totalAmount, order)
+            else -> updateUserNormalInventory(user, quantity, totalAmount, order)
+        }
+    }
+
+    private fun updateUserNormalInventory(
+        user: User,
+        quantity: Int,
+        totalAmount: Int,
+        order: Order
+    ) {
+        user.inventory.addNormalESOPToLocked(quantity)
+        user.inventory.removeNormalESOPFromFree(quantity)
+        user.wallet.credit += (totalAmount * 0.98).toInt()
+        user.orders.add(order.id)
+    }
+
+    private fun updateUserPerformanceInventory(
+        user: User,
+        quantity: Int,
+        totalAmount: Int,
+        order: Order
+    ) {
+        user.inventory.addPerformanceESOPToLocked(quantity)
+        user.inventory.removePerformanceESOPFromFree(quantity)
+        user.wallet.credit += totalAmount
+        user.orders.add(order.id)
+    }
+
+    private fun updateUserWallet(
+        user: User,
+        totalAmount: Int,
+        quantity: Int,
+        order: Order
+    ) {
+        user.wallet.transferAmountFromFreeToLocked(totalAmount)
+        user.inventory.addESOPToCredit(quantity)
+        user.orders.add(order.id)
+    }
+
 
     private fun canPlaceSellOrder(
         esopType: String?,
